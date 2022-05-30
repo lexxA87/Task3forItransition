@@ -1,0 +1,4 @@
+{
+  "serverPort": "5000",
+  "DBUrl": "mongodb+srv://alex:mongoDB2022@task3foritransition.2bung.mongodb.net/Task3forItransition?retryWrites=true&w=majority"
+}
