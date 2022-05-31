@@ -1,8 +1,9 @@
 import { useSelector } from "react-redux";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Header from "./header/Header";
 import Login from "./login/Login";
 import Registration from "./regisration/Registration";
+import UsersTable from "./usersTable/UsersTable";
 
 function App() {
   const isAuth = useSelector((state) => state.user.isAuth);
@@ -11,8 +12,15 @@ function App() {
     <BrowserRouter>
       <div>
         <Header />
-        {!isAuth && (
+
+        {isAuth ? (
           <Routes>
+            <Route path="/" element={<UsersTable />} />
+            <Route path="/login" element={<Navigate to="/" />} />
+          </Routes>
+        ) : (
+          <Routes>
+            <Route path="/" element={<Navigate to="/login" />} />
             <Route path="/registration" element={<Registration />} />
             <Route path="/login" element={<Login />} />
           </Routes>
