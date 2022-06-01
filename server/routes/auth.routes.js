@@ -27,17 +27,44 @@ router.post(
 
       const { email, password, name } = req.body;
 
-      const condidate = await User.findOne({ email });
+      const condidateEmail = await User.findOne({ email });
+      const condidateName = await User.findOne({ name });
 
-      if (condidate) {
-        return res
-          .status(400)
-          .json({ message: `User with email ${email} already exist!` });
+      if (condidateEmail) {
+        return res.status(400).json({
+          message: `User with email ${email} already exist!`,
+        });
       }
+      if (condidateName) {
+        return res.status(400).json({
+          message: `User with name ${name} already exist!`,
+        });
+      }
+
+      const dateOfRegistration = new Date().toUTCString();
+      const dateOfLastLogin = new Date().toUTCString();
+      const userStatus = "no status";
       const hashPassword = await bcrypt.hash(password, 8);
-      const user = new User({ email, password: hashPassword, name });
+
+      const user = new User({
+        email,
+        password: hashPassword,
+        name,
+        userStatus,
+        dateOfRegistration,
+        dateOfLastLogin,
+      });
       await user.save();
-      return res.json({ message: "User was created" });
+
+      return res.json({
+        message: "User was created",
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          dateOfLastLogin: user.dateOfLastLogin,
+        },
+      });
     } catch (e) {
       console.log(e);
       res.send({ message: "Server error" });
@@ -55,6 +82,7 @@ router.post(
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
+      const dateOfLastLogin = new Date().toUTCString();
 
       const isPassValid = bcrypt.compareSync(password, user.password);
 
@@ -65,6 +93,9 @@ router.post(
       const token = jwt.sign({ id: user.id }, config.get("secretKey"), {
         expiresIn: "1d",
       });
+
+      user.dateOfLastLogin = dateOfLastLogin;
+      await user.save();
 
       return res.json({
         token,

@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import Input from "../input/Input";
 import { registration } from "../../actions/user";
+import { useDispatch } from "react-redux";
 
 function Registration() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
 
   return (
     <div className="row justify-content-md-center">
@@ -36,7 +38,7 @@ function Registration() {
               htmlId="password"
             />
             <button
-              onClick={() => registration(name, email, password)}
+              onClick={() => dispatch(registration(name, email, password))}
               className="btn btn-primary mb-3"
             >
               REGISTRATION
