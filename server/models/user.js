@@ -7,6 +7,7 @@ const User = new Schema({
   userStatus: { type: String },
   dateOfRegistration: { type: String, required: true },
   dateOfLastLogin: { type: String, required: true },
+  selected: { type: Boolean, required: true },
 });
 
 module.exports = model("User", User);

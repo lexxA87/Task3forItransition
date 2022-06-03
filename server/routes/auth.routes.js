@@ -43,7 +43,8 @@ router.post(
 
       const dateOfRegistration = new Date().toUTCString();
       const dateOfLastLogin = new Date().toUTCString();
-      const userStatus = "no status";
+      const userStatus = "Unblock";
+      const selected = false;
       const hashPassword = await bcrypt.hash(password, 8);
 
       const user = new User({
@@ -53,6 +54,7 @@ router.post(
         userStatus,
         dateOfRegistration,
         dateOfLastLogin,
+        selected,
       });
       await user.save();
 
@@ -82,6 +84,11 @@ router.post(
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
+
+      if (user.userStatus === "Blocked") {
+        return res.status(403).json({ message: "User was blocked" });
+      }
+
       const dateOfLastLogin = new Date().toUTCString();
 
       const isPassValid = bcrypt.compareSync(password, user.password);
