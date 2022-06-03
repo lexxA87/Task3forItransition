@@ -7,6 +7,9 @@ import {
   updateUserStatus,
 } from "../../actions/users";
 import { logout } from "../../reducers/userReducer";
+import BlockIcon from "../icons/BlockIcon";
+import DeleteIcon from "../icons/DeleteIcon";
+import UnblockIkon from "../icons/UnblockIkon";
 // import UsersTable from "../usersTable/UsersTable";
 
 function Users() {
@@ -23,9 +26,12 @@ function Users() {
     fetchData();
   }, [dispatch]);
 
-  useEffect(() => {
-    setSelectedUsers([]);
-  }, [users]);
+  // useEffect(() => {
+  //   // setSelectedUsers([]);
+  //   users.forEach((user) => {
+  //     updateUserSelected(user._id, false);
+  //   });
+  // }, [users]);
 
   const onMasterCheck = (e) => {
     const checkUsers = users;
@@ -46,12 +52,21 @@ function Users() {
     const totalItems = users.length;
     const totalCheckedItems = checkUsers.filter((e) => e.selected).length;
     setMasterChecked(totalItems === totalCheckedItems);
-    setSelectedUsers(users.filter((e) => e.selected));
+    setSelectedUsers(checkUsers.filter((e) => e.selected));
   };
 
   const allUsers = users.map((user) => {
     return (
-      <tr key={user._id} className={user.selected ? "table-active" : ""}>
+      <tr
+        key={user._id}
+        className={
+          user.selected
+            ? "table-active"
+            : user._id === currentUserID
+            ? "table-success"
+            : ""
+        }
+      >
         <th scope="row">
           <input
             className="form-check-input"
@@ -74,13 +89,14 @@ function Users() {
 
   const deleteUsersByCheck = (array) => {
     array.forEach((user) => {
-      updateUserSelected(user._id);
+      updateUserSelected(user._id, true);
       if (user._id === currentUserID) {
         dispatch(logout());
       }
     });
 
     dispatch(deleteUsers());
+    setMasterChecked(false);
   };
 
   const updateUsersStatusBlock = (array, userStatus) => {
@@ -91,6 +107,7 @@ function Users() {
       }
     });
     dispatch(updateUserStatus(userStatus));
+    setMasterChecked(false);
   };
 
   const updateUsersStatusUnblock = (array, userStatus) => {
@@ -98,6 +115,7 @@ function Users() {
       updateUserSelected(user._id);
     });
     dispatch(updateUserStatus(userStatus));
+    setMasterChecked(false);
   };
 
   console.log(selectedUsers);
@@ -110,6 +128,7 @@ function Users() {
           type="button"
           onClick={() => deleteUsersByCheck(selectedUsers)}
         >
+          <DeleteIcon />
           Delete
         </button>
         <button
@@ -117,6 +136,7 @@ function Users() {
           type="button"
           onClick={() => updateUsersStatusBlock(selectedUsers, "Blocked")}
         >
+          <BlockIcon />
           Block
         </button>
         <button
@@ -124,6 +144,7 @@ function Users() {
           type="button"
           onClick={() => updateUsersStatusUnblock(selectedUsers, "Unblock")}
         >
+          <UnblockIkon />
           Unblock
         </button>
       </div>

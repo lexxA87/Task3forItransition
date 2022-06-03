@@ -45,6 +45,8 @@ router.put(
 
       await User.updateMany({ selected: true }, { userStatus: userStatus });
 
+      await User.updateMany({ selected: true }, { selected: false });
+
       const users = await User.find();
 
       res.send(users);

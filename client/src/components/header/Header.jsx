@@ -15,7 +15,14 @@ function Header() {
         {isAuth ? (
           <div>
             <h2>Current user: {currentUserName}</h2>
-            <button onClick={() => dispatch(logout())}>Exit</button>
+            <button
+              className="btn btn-warning"
+              onClick={() => dispatch(logout())}
+            >
+              <i className="bi bi-box-arrow-left m-2"></i>
+              Exit
+            </button>
+            <hr class="border-dark border-3 opacity-75"></hr>
           </div>
         ) : null}
       </div>
